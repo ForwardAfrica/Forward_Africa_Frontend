@@ -1,0 +1,83 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Helper functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function getUserRole() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role;
+    }
+
+    function isAdmin() {
+      return getUserRole() in ['admin', 'super_admin'];
+    }
+
+    function canManageCourses() {
+      return getUserRole() in ['content_manager', 'admin', 'super_admin'];
+    }
+
+    function isOwner(userId) {
+      return request.auth != null && request.auth.uid == userId;
+    }
+
+    // User profiles
+    match /users/{userId} {
+      allow read, write: if isAuthenticated() && isOwner(userId);
+      allow read: if isAuthenticated() && isAdmin();
+      allow write: if isAuthenticated() && isAdmin();
+    }
+
+    // Courses
+    match /courses/{courseId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isAuthenticated() && canManageCourses();
+      allow delete: if isAuthenticated() && isAdmin();
+    }
+
+    // User progress - private to each user
+    match /progress/{userId}/courses/{courseId}/lessons/{lessonId} {
+      allow read, write: if isAuthenticated() && isOwner(userId);
+      allow read: if isAuthenticated() && isAdmin();
+    }
+
+    // Categories
+    match /categories/{categoryId} {
+      allow read: if isAuthenticated();
+      allow write: if isAuthenticated() && canManageCourses();
+    }
+
+    // Instructors
+    match /instructors/{instructorId} {
+      allow read: if isAuthenticated();
+      allow write: if isAuthenticated() && canManageCourses();
+    }
+
+    // Certificates
+    match /certificates/{certificateId} {
+      allow read: if isAuthenticated() &&
+        (resource.data.userId == request.auth.uid || isAdmin());
+      allow create: if isAuthenticated() &&
+        request.auth.uid == resource.data.userId;
+      allow write: if isAuthenticated() && isAdmin();
+    }
+
+    // User achievements
+    match /achievements/{userId}/user_achievements/{achievementId} {
+      allow read, write: if isAuthenticated() && isOwner(userId);
+      allow read: if isAuthenticated() && isAdmin();
+    }
+
+    // User notifications
+    match /notifications/{userId}/user_notifications/{notificationId} {
+      allow read, write: if isAuthenticated() && isOwner(userId);
+      allow write: if isAuthenticated() && isAdmin();
+    }
+
+    // Audit logs (admin only)
+    match /audit_logs/{logId} {
+      allow read, write: if isAuthenticated() && isAdmin();
+    }
+  }
+}

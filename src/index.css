@@ -1,0 +1,163 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom animations for notifications */
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* Prevent layout shifts during loading */
+.loading-skeleton {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: .5;
+  }
+}
+
+/* Prevent content jumping */
+.content-placeholder {
+  min-height: 200px;
+}
+
+/* Smooth transitions */
+.smooth-transition {
+  transition: opacity 0.3s ease-in-out;
+}
+
+/* Prevent flash of unstyled content */
+.no-fouc {
+  visibility: hidden;
+}
+
+.no-fouc.loaded {
+  visibility: visible;
+}
+
+:root {
+  color-scheme: dark;
+}
+
+body {
+  @apply bg-black text-gray-100;
+  font-family: Poppins!important;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Montserrat', sans-serif;
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.scrollbar-hide {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+/* Smooth transitions */
+a, button {
+  @apply transition-all duration-200;
+}
+
+/* Card hover effects */
+.card-hover {
+  @apply transition-transform duration-300 hover:scale-105;
+}
+
+/* Card orientation transition */
+.card-orientation-transition {
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Card expansion effect */
+.card-expansion {
+  transform-origin: left center;
+  will-change: transform;
+}
+
+/* Prevent layout shifts during card expansion */
+.card-container {
+  overflow: visible;
+  position: relative;
+  margin-right: 0.25rem;
+  transform: translateX(0) scale(1);
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Active card with white border */
+.card-container.active {
+  border: 2px solid white;
+  border-radius: 0.5rem;
+}
+
+/* Landscape expansion effect */
+.card-landscape-expand {
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Adjacent cards pushed to the right */
+.card-container.adjacent-pushed {
+  transform: translateX(18rem); /* Reduced push distance to prevent huge gaps */
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Landscape image effect */
+.card-landscape-image {
+  transition: object-fit 0.5s ease-in-out;
+}
+
+.card-landscape-image:hover {
+  object-fit: contain;
+  object-position: center;
+}
+
+/* Maintain card height during aspect ratio changes */
+.card-aspect-maintain {
+  height: auto;
+  min-height: 0;
+}
+
+/* Line clamp utility */
+.line-clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Card grid container with overflow visible - only for course grids */
+.grid.card-grid-container {
+  overflow: visible !important;
+  position: relative;
+}
+
+/* Homepage-specific card margins */
+.homepage .card-container {
+  margin-right: 0.125rem; /* Reduced margin for homepage */
+}
+
+/* Regular card margins for other pages */
+.card-container {
+  overflow: visible;
+  position: relative;
+  margin-right: 0.25rem;
+  transform: translateX(0) scale(1);
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}

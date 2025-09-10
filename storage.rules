@@ -1,0 +1,71 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    // Helper functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function getUserRole() {
+      return firestore.get(/databases/(default)/documents/users/$(request.auth.uid)).data.role;
+    }
+
+    function isAdmin() {
+      return getUserRole() in ['admin', 'super_admin'];
+    }
+
+    function canManageCourses() {
+      return getUserRole() in ['content_manager', 'admin', 'super_admin'];
+    }
+
+    function isOwner(userId) {
+      return request.auth != null && request.auth.uid == userId;
+    }
+
+    // User avatars - public read, user write
+    match /avatars/{userId}/{allPaths=**} {
+      allow read: if true; // Public read for avatars
+      allow write: if isAuthenticated() && isOwner(userId);
+    }
+
+    // Course media (admin managed)
+    match /course-media/{courseId}/{allPaths=**} {
+      allow read: if isAuthenticated();
+      allow write: if isAuthenticated() && canManageCourses();
+    }
+
+    // Course thumbnails and banners
+    match /course-thumbnails/{courseId}/{allPaths=**} {
+      allow read: if isAuthenticated();
+      allow write: if isAuthenticated() && canManageCourses();
+    }
+
+    match /course-banners/{courseId}/{allPaths=**} {
+      allow read: if isAuthenticated();
+      allow write: if isAuthenticated() && canManageCourses();
+    }
+
+    // Certificates (private to users)
+    match /certificates/{certificateId} {
+      allow read: if isAuthenticated() &&
+        (resource.metadata.userId == request.auth.uid || isAdmin());
+      allow write: if isAuthenticated() && isAdmin();
+    }
+
+    // Instructor avatars
+    match /instructor-avatars/{instructorId}/{allPaths=**} {
+      allow read: if isAuthenticated();
+      allow write: if isAuthenticated() && canManageCourses();
+    }
+
+    // Temporary uploads (for processing)
+    match /temp/{userId}/{allPaths=**} {
+      allow read, write: if isAuthenticated() && isOwner(userId);
+    }
+
+    // Admin uploads
+    match /admin/{allPaths=**} {
+      allow read, write: if isAuthenticated() && isAdmin();
+    }
+  }
+}

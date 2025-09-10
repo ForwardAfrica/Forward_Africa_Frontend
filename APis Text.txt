@@ -1,0 +1,238 @@
+FORWARD AFRICA LEARNING PLATFORM - COMPLETE API LISTINGS
+=======================================================
+
+Base URLs:
+- Development: http://localhost:3002/api
+- Production: https://api.fowardafrica.com/api
+
+Authentication:
+All protected endpoints require JWT token in Authorization header:
+Authorization: Bearer <your-jwt-token>
+
+================================================================================
+AUTHENTICATION ENDPOINTS
+================================================================================
+
+User Registration & Login:
+POST /auth/register                    - Register new user account (No Auth)
+POST /auth/login                       - Authenticate user and get token (No Auth)
+POST /auth/refresh                     - Refresh access token (No Auth)
+POST /auth/logout                      - Logout and invalidate tokens (Auth Required)
+GET  /auth/me                          - Get current user profile (Auth Required)
+POST /auth/verify                      - Verify user account (No Auth)
+POST /auth/change-password             - Change user password (Auth Required)
+POST /auth/forgot-password             - Request password reset (No Auth)
+POST /auth/verify-reset-code           - Verify reset code (No Auth)
+POST /auth/reset-password              - Reset password with code (No Auth)
+
+================================================================================
+USER MANAGEMENT ENDPOINTS
+================================================================================
+
+User Operations:
+GET    /users                          - Get all users (Auth + Admin)
+GET    /users/:id                      - Get user by ID (Auth Required)
+GET    /users/email/:email             - Get user by email (Auth Required)
+POST   /users                          - Create new user (Auth + Admin)
+PUT    /users/:id                      - Update user profile (Auth Required)
+DELETE /users/:id                      - Delete user (Auth + Admin)
+PUT    /users/:id/permissions          - Update user permissions (Auth + Admin)
+
+================================================================================
+COURSE MANAGEMENT ENDPOINTS
+================================================================================
+
+Course Operations:
+GET    /courses                        - Get all courses (No Auth)
+GET    /courses/featured               - Get featured courses (No Auth)
+GET    /courses/:id                    - Get course by ID (No Auth)
+GET    /courses/category/:categoryId   - Get courses by category (No Auth)
+POST   /courses                        - Create new course (Auth + Admin)
+PUT    /courses/:id                    - Update course (Auth + Admin)
+DELETE /courses/:id                    - Delete course (Auth + Admin)
+
+Lesson Operations:
+GET    /lessons/:courseId              - Get lessons for course (No Auth)
+POST   /lessons                        - Create new lesson (Auth + Admin)
+POST   /lessons/batch                  - Create multiple lessons (Auth + Admin)
+PUT    /lessons/:id                    - Update lesson (Auth + Admin)
+DELETE /lessons/:courseId              - Delete lesson (Auth + Admin)
+
+================================================================================
+CATEGORY MANAGEMENT ENDPOINTS
+================================================================================
+
+GET    /categories                     - Get all categories (No Auth)
+GET    /categories/:id                 - Get category by ID (No Auth)
+POST   /categories                     - Create new category (Auth + Admin)
+
+================================================================================
+INSTRUCTOR MANAGEMENT ENDPOINTS
+================================================================================
+
+GET    /instructors                    - Get all instructors (No Auth)
+GET    /instructors/:id                - Get instructor by ID (No Auth)
+GET    /instructors/:id/courses        - Get instructor courses (No Auth)
+POST   /instructors                    - Create new instructor (Auth + Admin)
+PUT    /instructors/:id                - Update instructor (Auth + Admin)
+DELETE /instructors/:id                - Delete instructor (Auth + Admin)
+
+================================================================================
+PROGRESS & ANALYTICS ENDPOINTS
+================================================================================
+
+User Progress:
+GET    /progress/:userId/:courseId     - Get user progress for course (Auth)
+GET    /progress/:userId               - Get all user progress (Auth)
+POST   /progress                       - Create/update progress (Auth)
+PUT    /progress/:userId/:courseId     - Update user progress (Auth)
+
+Analytics:
+GET    /analytics/platform             - Get platform statistics (No Auth)
+GET    /analytics/platform/admin       - Get admin platform stats (Auth + Admin)
+GET    /analytics/detailed             - Get detailed analytics (No Auth)
+
+================================================================================
+CERTIFICATE & ACHIEVEMENT ENDPOINTS
+================================================================================
+
+GET    /certificates/:userId           - Get user certificates (Auth)
+GET    /certificates/verify/:code      - Verify certificate (No Auth)
+GET    /achievements/:userId           - Get user achievements (Auth)
+
+================================================================================
+SEARCH ENDPOINTS
+================================================================================
+
+GET    /search                         - Search across platform (No Auth)
+GET    /search/suggestions             - Get search suggestions (No Auth)
+GET    /search/popular                 - Get popular searches (No Auth)
+GET    /search/analytics               - Get search analytics (No Auth)
+
+================================================================================
+FILE UPLOAD ENDPOINTS
+================================================================================
+
+POST   /upload/avatar                  - Upload user avatar (Auth)
+POST   /upload/course-thumbnail        - Upload course thumbnail (Auth + Admin)
+POST   /upload/course-banner           - Upload course banner (Auth + Admin)
+POST   /upload/lesson-thumbnail        - Upload lesson thumbnail (Auth + Admin)
+POST   /upload/certificate             - Upload certificate template (Auth + Admin)
+
+================================================================================
+VIDEO CONTENT MANAGEMENT ENDPOINTS
+================================================================================
+
+Video Operations:
+POST   /video-content/upload/:lessonId - Upload video content (Auth)
+GET    /video-content/status/:videoAssetId - Get video processing status (Auth)
+GET    /video-content/qualities/:videoAssetId - Get available video qualities (Auth)
+GET    /video-content/subtitles/:videoAssetId - Get video subtitles (Auth)
+
+Workflow Management:
+GET    /video-content/workflow/:contentType/:contentId - Get workflow status (Auth)
+PUT    /video-content/workflow/:workflowId/status - Update workflow status (Auth)
+POST   /video-content/workflow/:workflowId/assign-reviewer - Assign reviewer (Auth + Admin)
+POST   /video-content/workflow/:workflowId/review-notes - Add review notes (Auth)
+
+Job Management:
+GET    /video-content/jobs/:jobId      - Get job status (Auth)
+GET    /video-content/jobs/content/:contentId - Get jobs for content (Auth)
+POST   /video-content/jobs/:jobId/retry - Retry failed job (Auth + Admin)
+GET    /video-content/jobs/queue/stats - Get queue statistics (Auth + Admin)
+
+================================================================================
+VIDEO PROGRESS TRACKING ENDPOINTS
+================================================================================
+
+POST   /video-progress/sessions/start  - Start video session (Auth)
+PUT    /video-progress/sessions/:sessionId/end - End video session (Auth)
+POST   /video-progress/intervals       - Record watch intervals (Auth)
+PUT    /video-progress/resume-points   - Update resume points (Auth)
+GET    /video-progress/resume-points/:courseId/:lessonId - Get resume point (Auth)
+GET    /video-progress/analytics/:courseId/:lessonId - Get progress analytics (Auth)
+PUT    /video-progress/analytics/:courseId/:lessonId - Update progress analytics (Auth)
+
+================================================================================
+COMMUNICATION CENTER ENDPOINTS
+================================================================================
+
+Announcements:
+GET    /communications/announcements   - Get announcements (Auth)
+POST   /communications/announcements   - Create announcement (Auth + Admin)
+PUT    /communications/announcements/:id - Update announcement (Auth + Admin)
+DELETE /communications/announcements/:id - Delete announcement (Auth + Admin)
+
+Email Campaigns:
+GET    /communications/email-campaigns - Get campaigns (Auth + Admin)
+POST   /communications/email-campaigns - Create campaign (Auth + Admin)
+POST   /communications/email-campaigns/:id/send - Send campaign (Auth + Admin)
+
+Push Notifications:
+GET    /communications/push-notifications - Get notifications (Auth + Admin)
+POST   /communications/push-notifications - Create notification (Auth + Admin)
+POST   /communications/push-notifications/:id/send - Send notification (Auth + Admin)
+
+Templates & Settings:
+GET    /communications/email-templates - Get email templates (Auth + Admin)
+POST   /communications/email-templates - Create template (Auth + Admin)
+GET    /communications/settings        - Get settings (Auth + Admin)
+PUT    /communications/settings        - Update settings (Auth + Admin)
+GET    /communications/analytics       - Get analytics (Auth + Admin)
+
+================================================================================
+FAVORITES MANAGEMENT ENDPOINTS
+================================================================================
+
+POST   /favorites                      - Add course to favorites (Auth)
+DELETE /favorites/:courseId            - Remove course from favorites (Auth)
+GET    /favorites                      - Get user favorites (Auth)
+
+================================================================================
+HOMEPAGE BANNER MANAGEMENT ENDPOINTS
+================================================================================
+
+GET    /banner/config                  - Get banner configuration (No Auth)
+PUT    /banner/config                  - Update banner configuration (Auth + Admin)
+POST   /banner/upload                  - Upload banner image (Auth + Admin)
+
+================================================================================
+SYSTEM MANAGEMENT ENDPOINTS
+================================================================================
+
+System Configuration:
+GET    /system/config                  - Get system configuration (Auth + Admin)
+PUT    /system/config                  - Update system configuration (Auth + Admin)
+GET    /system/status                  - Get system status (Auth + Admin)
+POST   /system/backup                  - Create system backup (Auth + Admin)
+
+System Health & Metrics:
+GET    /health                         - Health check (No Auth)
+GET    /system/rate-limits             - Get rate limit status (No Auth)
+GET    /system/metrics                 - Get system metrics (Auth + Admin)
+
+================================================================================
+AUDIT & MONITORING ENDPOINTS
+================================================================================
+
+GET    /audit-logs                     - Get audit logs (Auth + Admin)
+POST   /audit-logs                     - Create audit log (Auth)
+GET    /audit-logs/test                - Test audit logging (Auth)
+
+================================================================================
+SESSION & ENGAGEMENT TRACKING ENDPOINTS
+================================================================================
+
+POST   /sessions/start                 - Start user session (Auth)
+PUT    /sessions/:sessionId/end        - End user session (Auth)
+POST   /watch-time/start               - Start watch time tracking (Auth)
+PUT    /watch-time/:watchId/end        - End watch time tracking (Auth)
+POST   /page-views                     - Record page view (No Auth)
+POST   /engagement/update              - Update engagement metrics (Auth)
+
+================================================================================
+WEBSOCKET ENDPOINTS
+================================================================================
+
+Real-time Communication:
+ws://localhost:3002/ws                 - WebSocket connection for real-time updates (Auth)
